@@ -1,27 +1,59 @@
-# NextelixirFrontend
+# NetElixir Feedback Task Front-End
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.1.
+Design a web application that allows employees to submit feedback toward each
+other&#39;s performance review.
 
-## Development server
+## Getting Started
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Clone the two gihub projects (NetElixirFeedbackTask and NetElixirRestAPI.) into your system.
 
-## Code scaffolding
+### Download:
+* [Download NetElixirFeedbackTask] (https://github.com/VenkateshMogili/foldername)
+* [Download NetElixirRestAPI] (https://github.com/VenkateshMogili/foldername)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+### Installing
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+You need to install below packages after cloning NetElixirFeedbackTask.
+Open NetElixirFeedbackTask folder and open cmd in respective folder and enter below commands to install npm packages.
+```
+npm install
 
-## Running unit tests
+Example: C:\Users\venkateshmogili\Desktop\NetElixirFeedbackTask>npm install
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Running the front-end server.
+Type below command in cmd.
+```
+ng serve
+Example: C:\Users\venkateshmogili\Desktop\NetElixirFeedbackTask>ng serve
+```
+Client Side Server will start on port 4200. Open the browser and run it.
+Example: http://localhost:4200
 
-## Running end-to-end tests
+## Running the back-end server(REST API).
+Open NetElixirRestAPI folder
+open cmd
+Type below command in cmd.
+```
+noder server.js
+Example: C:\Users\venkateshmogili\Desktop\NetElixirFeedbackTask>node server.js
+```
+Rest API will start running on port 4000. 
+Example: It shows a console message. Server is running on port : 4000.
+You can check whether server is running or not. Open browser and run it.
+Example: http://localhost:4000
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Built With
 
-## Further help
+Front-end Technologies:
+* [Angular 6](https://angular.io/) - The web framework used for front-end.
+* [Bootstrap 3.3](https://getbootstrap.com/docs/3.3/) - The web framework used for responsive design.
+* [Font awesome toolkit](https://fontawesome.com/) - It is font and icon toolkit used for front-end icons.
+* [JQuery 3.3.1](https://jquery.com) - It is a Javascript Library used in front-end for modal pop up's animation.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Back-end Technologies:
+* [Node.js 10.5.0](https://nodejs.org/en/) - It's a JavaScript run-time environment used for Server.
+* [mLab](https://mlab.com/) - NoSQL Database. It has been used to store the website data in cloud.
+
+## Thank you
