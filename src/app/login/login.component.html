@@ -1,0 +1,28 @@
+<app-header></app-header>
+<h1 style="text-align:center;font-family:Arial;color:dodgerblue">Welcome to NetElixir</h1>
+<div style="text-align:center;margin-top:2%">
+  <img src="assets/usericon.png" style="width:200px;height:200px;border-radius:100px;"><br/><br>
+  <form (ngSubmit)="validateLogin()" novalidate #f="ngForm">
+    <div class="container">
+      <div class="col-md-4"></div>
+      <div class="row">
+        <div class="col-md-4">
+          <input type="email" placeholder="Email" name="email" [(ngModel)]="model.email" class="form-control" required/>
+        </div>
+        </div>
+      <div class="col-md-4"></div>
+      <div class="row">
+        <div class="col-md-4" style="margin-top:10px;">
+          <input type="password" placeholder="Password" name="password" [(ngModel)]="model.password" class="form-control" required/>
+        </div>
+        </div>
+      <div class="col-md-4"></div>
+        <div class="row">
+        <div class="col-md-12" style="margin-top:10px;">
+          <input type="submit" value="Login" class="btn btn-primary" [disabled]="!f.form.valid"/>
+        </div>
+        </div>
+      </div>
+	</form>
+</div>
+

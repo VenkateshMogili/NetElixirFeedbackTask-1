@@ -1,0 +1,17 @@
+<nav class="navbar navbar-inverse" style="background-color:dodgerblue;border:0;border-radius:0;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" [routerLink]="['/login']" style="color:white;">NetElixir</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li *ngIf="loggedin"><a [routerLink]="['/dashboard']" style="color:white">Dashboard</a></li>
+      <li *ngIf="loggedin"><a [routerLink]="['/reviews']" style="color:white">Reviews</a></li>
+      <li *ngIf="loggedin && isAdmin"><a [routerLink]="['/employees']" style="color:white">Employees</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li *ngIf="!loggedin"><a [routerLink]="['/login']" style="color:white"><span class="fa fa-sign-in"></span> Login</a></li>
+      <li *ngIf="loggedin"><a style="color:white"><span class="fa fa-user"></span> {{name}}</a></li>
+      <li *ngIf="loggedin"><a (click)="logout()" style="color:white;cursor:pointer"><span class="fa fa-sign-out"></span> Logout</a></li>
+    </ul>
+  </div>
+</nav>

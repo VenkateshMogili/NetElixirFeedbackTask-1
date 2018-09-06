@@ -1,0 +1,243 @@
+<app-header></app-header>
+<div class="container">
+<h2 class="text-primary">Reviews
+  <small *ngIf="isAdmin" style="border:2px solid dodgerblue;padding:5px;border-radius:100px;float:right;cursor:pointer;margin-right:5px;" data-toggle="modal" data-target="#myModal" (click)="openPopup('Assign')"> Assign Employees <i class="fa fa-user-plus"></i></small>
+
+  <small *ngIf="isAdmin" style="border:2px solid dodgerblue;padding:5px;border-radius:100px;float:right;cursor:pointer;margin-right:5px;" data-toggle="modal" data-target="#myModal" (click)="openPopup('Add')"> Add Review <i class="fa fa-plus-circle"></i></small>
+</h2>
+<div *ngIf="reviewslen<=0">
+  <h2 class="text-danger text-center" style="margin-top:10%">No Available Reviews</h2>
+</div>
+<div *ngIf="reviewslen>0">
+  <table class="table">
+    <thead>
+    <tr class="bg-primary">
+      <th>Email</th>
+      <th>View Review</th>
+      <th>Edit Review</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody *ngFor="let review of reviews | paginate: { itemsPerPage: 10, currentPage: p }">
+    <tr *ngIf="isAdmin || review['email1']==user_details">
+      <td>{{review['email']}}</td>
+      <td *ngIf="isAdmin || review['email1']==user_details"> <button class="btn btn-primary btn-sm"  (click)="openPopup2('View', review['_id'])" data-toggle="modal" data-target="#myModal"><i class="fa fa-eye"></i></button> {{review['review'] | slice:0:40}}...</td>
+      <td *ngIf="isAdmin || review['email1']==user_details"><button class="btn btn-success btn-sm" (click)="openPopup2('Update', review['_id'])" data-toggle="modal" data-target="#myModal"><i class="fa fa-pencil"></i></button></td>
+      <td><b *ngIf="review['status']" class="text-success">Reviewed</b>
+      <b *ngIf="!review['status']" class="text-danger">Not Reviewed</b></td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="col-md-offset-9 col-md-3">
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  </div>
+</div>
+
+
+<!--Add,View and Update Reviews-->
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{title}}</h4>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="title=='Add Review'">
+          <form (ngSubmit)="addReview()" novalidate #f="ngForm">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <input type="email" placeholder="Employee Email Address" name="email" [(ngModel)]="model.email" class="form-control" required/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12" style="margin-top:10px;">
+                  <input type="submit" value="Add" class="btn btn-primary" [disabled]="!f.form.valid"/>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!--Assign Employees-->
+        <div *ngIf="title=='Assign Employees'">
+          <form (ngSubmit)="assignEmployees()" novalidate #f="ngForm">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <input type="email" placeholder="Employee1 Email Address as Admin" name="email1" [(ngModel)]="model4.email1" class="form-control" required/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <input type="email" placeholder="Employee2 Email Address" name="email2" [(ngModel)]="model4.email2" class="form-control" required/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12" style="margin-top:10px;">
+                  <input type="submit" value="Assign" class="btn btn-primary" [disabled]="!f.form.valid"/>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <!--Update Review-->
+        <div *ngIf="title=='Update Review'">
+          <form (ngSubmit)="editReview()" novalidate #f="ngForm">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <input type="email" placeholder="Email" value="{{model2.email}}" class="form-control" disabled/>
+                  <input type="email" placeholder="Email" name="email" style="display:none" [(ngModel)]="model2.email" class="form-control"/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <textarea placeholder="Write your review here..." name="review" [(ngModel)]="model2.review" class="form-control" required></textarea>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <div *ngIf="model2.rating==0">
+                    <span class="fa fa-star" (click)="rating(1)"></span>
+                    <span class="fa fa-star" (click)="rating(2)"></span>
+                    <span class="fa fa-star" (click)="rating(3)"></span>
+                    <span class="fa fa-star" (click)="rating(4)"></span>
+                    <span class="fa fa-star" (click)="rating(5)"></span>
+                  </div>
+                  <div *ngIf="model2.rating==1">
+                    <span class="fa fa-star checked" (click)="rating(1)"></span>
+                    <span class="fa fa-star" (click)="rating(2)"></span>
+                    <span class="fa fa-star" (click)="rating(3)"></span>
+                    <span class="fa fa-star" (click)="rating(4)"></span>
+                    <span class="fa fa-star" (click)="rating(5)"></span>
+                  </div>
+                  <div *ngIf="model2.rating==2">
+                    <span class="fa fa-star checked" (click)="rating(1)"></span>
+                    <span class="fa fa-star checked" (click)="rating(2)"></span>
+                    <span class="fa fa-star" (click)="rating(3)"></span>
+                    <span class="fa fa-star" (click)="rating(4)"></span>
+                    <span class="fa fa-star" (click)="rating(5)"></span>
+                  </div>
+                  <div *ngIf="model2.rating==3">
+                    <span class="fa fa-star checked" (click)="rating(1)"></span>
+                    <span class="fa fa-star checked" (click)="rating(2)"></span>
+                    <span class="fa fa-star checked" (click)="rating(3)"></span>
+                    <span class="fa fa-star" (click)="rating(4)"></span>
+                    <span class="fa fa-star" (click)="rating(5)"></span>
+                  </div>
+
+                  <div *ngIf="model2.rating==4">
+                    <span class="fa fa-star checked" (click)="rating(1)"></span>
+                    <span class="fa fa-star checked" (click)="rating(2)"></span>
+                    <span class="fa fa-star checked" (click)="rating(3)"></span>
+                    <span class="fa fa-star checked" (click)="rating(4)"></span>
+                    <span class="fa fa-star" (click)="rating(5)"></span>
+                  </div>
+
+                  <div *ngIf="model2.rating==5">
+                    <span class="fa fa-star checked" (click)="rating(1)"></span>
+                    <span class="fa fa-star checked" (click)="rating(2)"></span>
+                    <span class="fa fa-star checked" (click)="rating(3)"></span>
+                    <span class="fa fa-star checked" (click)="rating(4)"></span>
+                    <span class="fa fa-star checked" (click)="rating(5)"></span>
+                  </div>
+                  (<span>{{model2.rating}} / 5)</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12" style="margin-top:10px;">
+                  <input type="submit" value="Submit" class="btn btn-primary" [disabled]="!f.form.valid"/>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+<!--View Review-->
+        <!--Update Review-->
+        <div *ngIf="title=='View Review'">
+          <form novalidate #f="ngForm">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <i class="fa fa-user"></i> {{model2.email}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <pre style="text-align: justify;font-family:Arial;border-left: 3px solid dodgerblue;padding: 5px;"><i class="fa fa-pencil"></i> {{model2.review}}</pre>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <small><b>Rating:
+                    (<span>{{model2.rating}} / 5)</span></b></small>
+
+                  <div *ngIf="model2.rating==0">
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                  </div>
+                  <div *ngIf="model2.rating==1">
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                  </div>
+                  <div *ngIf="model2.rating==2">
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                  </div>
+                  <div *ngIf="model2.rating==3">
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                  </div>
+
+                  <div *ngIf="model2.rating==4">
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                  </div>
+
+                  <div *ngIf="model2.rating==5">
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                  </div>
+                  <small *ngIf="model2.reviewed_by"><b>Reviewed By:</b><br/>
+                    <span><i class="fa fa-user"></i> {{model2.reviewed_by}}</span>
+                  </small>
+                  <small *ngIf="!model2.reviewed_by" class="text-danger"><i class="fa fa-warning"></i> Not Reviewed</small>
+                </div>
+
+
+              </div>
+            </div>
+          </form>
+        </div>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

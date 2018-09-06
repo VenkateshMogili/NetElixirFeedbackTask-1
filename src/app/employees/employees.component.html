@@ -1,0 +1,154 @@
+<app-header></app-header>
+<div class="container">
+<h2 class="text-primary">Employees
+  <small style="border:3px solid dodgerblue;border-radius:100px;padding:5px;float:right;cursor:pointer;margin-right:5px;" data-toggle="modal" data-target="#myModal" (click)="openPopup('Add')"> Add Employee <i class="fa fa-plus-circle"></i></small>
+</h2>
+<div *ngIf="employeeslen<=0">
+  <p class="text-danger text-center">No Employees Found</p>
+</div>
+<div *ngIf="employeeslen>0">
+<table class="table">
+  <thead>
+  <tr class="bg-primary">
+    <th width="30%">Username</th>
+    <th width="25%">Email</th>
+    <th width="25%">Role</th>
+    <th width="30%">View/Update/Delete</th>
+  </tr>
+  </thead>
+  <tbody *ngFor="let employee of employees | paginate: { itemsPerPage: 10, currentPage: p }">
+  <tr>
+    <td>{{employee['username']}}</td>
+    <td>{{employee['email']}}</td>
+    <td><b *ngIf="employee['isAdmin']">Admin</b>
+    <b *ngIf="!employee['isAdmin']">Employee</b></td>
+    <td>
+      <a (click)="openPopup2('View',employee['_id'])" data-toggle="modal" data-target="#myModal"><button class="btn btn-success"><i class="fa fa-eye"></i></button></a>
+      <a (click)="openPopup2('Update',employee['_id'])" data-toggle="modal" data-target="#myModal"><button class="btn btn-primary"><i class="fa fa-pencil"></i></button></a>
+      <a (click)="openPopup2('Delete',employee['_id'])" *ngIf="!employee['isAdmin']"><button class="btn btn-danger"><i class="fa fa-trash"></i></button></a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+  <div class="col-md-offset-9 col-md-3">
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+    </div>
+</div>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{title}}</h4>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="title=='Add Employee'">
+        <form (ngSubmit)="addEmployee()" novalidate #f="ngForm">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6">
+                <input type="text" placeholder="Username" name="username" [(ngModel)]="model.username" class="form-control" required/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6" style="margin-top:10px;">
+                <input type="email" placeholder="Email" name="email" [(ngModel)]="model.email" class="form-control" required/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6" style="margin-top:10px;">
+                <input type="password" placeholder="Password" name="password" [(ngModel)]="model.password" class="form-control" required/>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6" style="margin-top:10px;">
+                <label>
+                <input type="checkbox" name="isAdmin" [(ngModel)]="model.isAdmin"/> Admin (Optional)
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12" style="margin-top:10px;">
+                <input type="submit" value="Add" class="btn btn-primary" [disabled]="!f.form.valid"/>
+              </div>
+            </div>
+          </div>
+        </form>
+        </div>
+
+        <!--Edit employee-->
+        <div *ngIf="title=='Update Employee'">
+          <form (ngSubmit)="editEmployee()" novalidate #f="ngForm">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6">
+                  <input type="text" placeholder="Username" name="username" [(ngModel)]="model2.username" class="form-control" required/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <input type="email" placeholder="Email" value="{{model2.email}}" class="form-control" required disabled/>
+                  <input type="email" placeholder="Email" name="email" style="display:none" [(ngModel)]="model2.email" class="form-control" required/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <input type="password" placeholder="Password" name="password" [(ngModel)]="model2.password" class="form-control" required/>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <label>
+                    <input type="checkbox" name="isAdmin" [(ngModel)]="model2.isAdmin"/> Admin (Optional)
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12" style="margin-top:10px;">
+                  <input type="submit" value="Update" class="btn btn-primary" [disabled]="!f.form.valid"/>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!--View Employee Details-->
+        <div *ngIf="title=='View Employee'">
+          <img src="../../assets/usericon.png" class="img-circle center-block" style="width:100px;height:100px;">
+          <form novalidate #f="ngForm">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6">
+                  <p class="text-primary text-center">Username:{{model3.username}}</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                  <p class="text-primary text-center">Email: {{model3.email}}</p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6" style="margin-top:10px;">
+                    <p *ngIf="model3.isAdmin" class="text-primary text-center">Role: Admin</p>
+                    <p *ngIf="!model3.isAdmin" class="text-primary text-center">Role: Employee</p>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
